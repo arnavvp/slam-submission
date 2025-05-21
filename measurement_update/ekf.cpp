@@ -54,9 +54,6 @@ class Localizer : public rclcpp::Node
         per_subscription_ = this->create_subscription<dv_msgs::msg::IndexedTrack>(
         "/perception/cones", 10, std::bind(&Localizer::topic_callback4, this, _1));
 
-      //timer_ = this->create_wall_timer( 
-      //1ms, std::bind(&Localizer::timer_callback, this));
-
     }
 
 
@@ -240,12 +237,10 @@ class Localizer : public rclcpp::Node
         
 
 
-      //RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.cones[0].color_code.c_str());
       conesFromPerception = msg.track;
       
       std::vector<int> associated_indices = performDataAssociation(mu_t, conesFromPerception, R_t);
       for (size_t i = 0; i < associated_indices.size(); ++i) {
-          //RCLCPP_INFO(this->get_logger(), "Associated index: %d", associated_indices[i]);
 
         x_k = known_landmarks[associated_indices[i]][0];
         y_k = known_landmarks[associated_indices[i]][1];
@@ -297,6 +292,8 @@ class Localizer : public rclcpp::Node
       publisher_->publish(message);
 
     }
+
+//Older faulty logic
 
     /*void timer_callback()
     {
