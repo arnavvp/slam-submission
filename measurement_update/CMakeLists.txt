@@ -19,6 +19,7 @@ find_package(Eigen3 REQUIRED)
 
 add_executable(ekf ekf.cpp data_assoc_trainee.cpp)
 add_executable(ekf_marker ekf_marker.cpp)
+add_executable(NN_data_assoc NN_data_assoc.cpp)
 
 
 target_include_directories(ekf_marker PUBLIC
@@ -28,6 +29,12 @@ target_include_directories(ekf_marker PUBLIC
 
 target_include_directories(ekf PUBLIC
  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+  ${EIGEN3_INCLUDE_DIR}
+)
+
+arget_include_directories(NN_data_assoc PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   ${EIGEN3_INCLUDE_DIR}
 )
@@ -52,13 +59,24 @@ ament_target_dependencies(ekf_marker
 
 ament_target_dependencies(ekf_marker rclcpp std_msgs sensor_msgs visualization_msgs eufs_msgs dv_msgs)
 
+ament_target_dependencies(NN_data_assoc
+  rclcpp
+  std_msgs
+  sensor_msgs
+  geometry_msgs
+  visualization_msgs
+  eufs_msgs
+  dv_msgs
+)
+
+target_link_libraries(NN_data_assoc Eigen3::Eigen)
+
 install(TARGETS
   ekf_marker
   ekf
+  NN_data_assoc
   DESTINATION lib/${PROJECT_NAME}
 )
-
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
